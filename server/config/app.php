@@ -194,7 +194,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        Fruitcake\Cors\CorsServiceProvider::class,
+        /*App\Providers\FortifyServiceProvider::class*/
     ],
 
     /*

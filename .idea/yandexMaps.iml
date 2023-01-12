@@ -51,7 +51,6 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/routing" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/process" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-uuid" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-php81" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-php80" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-php72" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-mbstring" />
@@ -86,7 +85,6 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/laravel/sanctum" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/laravel/sail" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/laravel/pint" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/laravel/framework" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/egulias/email-validator" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/dflydev/dot-access-data" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/vlucas/phpdotenv" />
@@ -116,6 +114,14 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/event-dispatcher" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/container" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/fruitcake/laravel-cors" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/laravel/fortify" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/dasprid/enum" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/paragonie/constant_time_encoding" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/pragmarx/google2fa" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/bacon/bacon-qr-code" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/laravel/framework" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/doctrine/deprecations" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

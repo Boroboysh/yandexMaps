@@ -45,7 +45,6 @@
       <path value="$PROJECT_DIR$/server/vendor/symfony/routing" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/process" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-uuid" />
-      <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-php81" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-php80" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-php72" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-mbstring" />
@@ -80,7 +79,6 @@
       <path value="$PROJECT_DIR$/server/vendor/laravel/sanctum" />
       <path value="$PROJECT_DIR$/server/vendor/laravel/sail" />
       <path value="$PROJECT_DIR$/server/vendor/laravel/pint" />
-      <path value="$PROJECT_DIR$/server/vendor/laravel/framework" />
       <path value="$PROJECT_DIR$/server/vendor/egulias/email-validator" />
       <path value="$PROJECT_DIR$/server/vendor/dflydev/dot-access-data" />
       <path value="$PROJECT_DIR$/server/vendor/vlucas/phpdotenv" />
@@ -110,6 +108,14 @@
       <path value="$PROJECT_DIR$/server/vendor/psr/event-dispatcher" />
       <path value="$PROJECT_DIR$/server/vendor/psr/container" />
       <path value="$PROJECT_DIR$/server/vendor/composer" />
+      <path value="$PROJECT_DIR$/server/vendor/fruitcake/laravel-cors" />
+      <path value="$PROJECT_DIR$/server/vendor/laravel/fortify" />
+      <path value="$PROJECT_DIR$/server/vendor/dasprid/enum" />
+      <path value="$PROJECT_DIR$/server/vendor/paragonie/constant_time_encoding" />
+      <path value="$PROJECT_DIR$/server/vendor/pragmarx/google2fa" />
+      <path value="$PROJECT_DIR$/server/vendor/bacon/bacon-qr-code" />
+      <path value="$PROJECT_DIR$/server/vendor/laravel/framework" />
+      <path value="$PROJECT_DIR$/server/vendor/doctrine/deprecations" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0" />

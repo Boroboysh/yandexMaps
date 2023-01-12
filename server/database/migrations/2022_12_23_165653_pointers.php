@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('pointers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('longitude');
-            $table->integer('latitude');
-            $table->string('username');
+            $table->double('longitude');
+            $table->double('latitude');
+            $table->integer('username_id');
         });
     }
 

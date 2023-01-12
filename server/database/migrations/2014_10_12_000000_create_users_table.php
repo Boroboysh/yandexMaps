@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('password');
+            $table->string('api_token', 80);
             $table->rememberToken();
         });
     }
