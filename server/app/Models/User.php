@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
+    use \Backpack\CRUD\app\Models\Traits\CrudTrait;
     /**
      * The attributes that are mass assignable.
      *
@@ -23,6 +24,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'password',
+        'email',
+        'is_admin'
     ];
 
     /**

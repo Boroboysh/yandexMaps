@@ -13,6 +13,13 @@ use Illuminate\Support\Str;
 class ApiController extends Controller
 {
     //
+    public function authStatus () {
+        if (Auth::check()) {
+            return 'You status: authorized';
+        }
+        return 'You status: not authorized';
+    }
+
     public function register(Request $request)
     {
         //Validate data
@@ -31,20 +38,22 @@ class ApiController extends Controller
         User::create([
             'name' => $request->input('name'),
             'password' => Hash::make($request->input('password')),
+            'email' => $request->input('email'),
+            'is_admin' => 0
         ]);
 
         $credentials = $request->validate([
-            'name' => ['required'],
+            'email' => ['required'],
             'password' => ['required'],
         ]);
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return response('Register OK. You authorized. Need redirect');
+            return response('SignIn OK. You authorized. Need redirect');
         }
 
-        return 'Register OK. You not authorized';
+        return 'SignIn OK. You not authorized';
     }
 
     public function logout(Request $request)
@@ -85,3 +94,4 @@ class ApiController extends Controller
         return response('Deleted', 200);
     }
 }
+
