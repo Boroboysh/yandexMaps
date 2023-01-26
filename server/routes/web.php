@@ -17,16 +17,18 @@ Route::get('/home', function () {
     return view('welcome');
 });
 
-Route::get('/logout', [\App\Http\Controllers\ApiController::class, 'logout']);
+Route::get('/logout', [\App\Http\Controllers\LoginController::class, 'logout']);
 
-Route::get('/auth/status', [\App\Http\Controllers\ApiController::class, 'authStatus']);
+Route::get('/auth/status', [\App\Http\Controllers\LoginController::class, 'authStatus']);
 
 Route::post('/auth/signin', [\App\Http\Controllers\LoginController::class, 'authenticate']);
 
-Route::post('/register', [\App\Http\Controllers\ApiController::class, 'register']);
+Route::post('/register', [\App\Http\Controllers\LoginController::class, 'register']);
 
-Route::middleware('auth:sanctum')->get('/list', [\App\Http\Controllers\ApiController::class, 'getPointList']);
+Route::get('/new_admin', [\App\Http\Controllers\LoginController::class, 'createAdmin']);
 
-Route::middleware('auth:sanctum')->post('/new_point', [\App\Http\Controllers\ApiController::class, 'newPoint']);
+Route::middleware('auth:sanctum')->get('/list', [\App\Http\Controllers\PointController::class, 'getPointList']);
 
-Route::middleware('auth:sanctum')->delete('/deletePoint', [\App\Http\Controllers\ApiController::class, 'deletePoint']);
+Route::middleware('auth:sanctum')->post('/new_point', [\App\Http\Controllers\PointController::class, 'newPoint']);
+
+Route::middleware('auth:sanctum')->delete('/deletePoint', [\App\Http\Controllers\PointController::class, 'deletePoint']);

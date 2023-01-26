@@ -32,7 +32,7 @@ class CheckIfAdmin
 
         // return ($user->is_admin == 1);
 
-       /* Auth::user();*/
+        Auth::user();
         return true;
     }
 

@@ -257,7 +257,8 @@ return [
     */
 
     // Fully qualified namespace of the User model
-    'user_model_fqn' => config('auth.providers.users.model'),
+    //auth.providers.users.model
+    'user_model_fqn' => App\Models\Admin::class,
     // 'user_model_fqn' => App\User::class, // works on Laravel <= 7
     // 'user_model_fqn' => App\Models\User::class, // works on Laravel >= 8
 
