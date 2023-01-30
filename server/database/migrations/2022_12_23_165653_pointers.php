@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->double('longitude');
             $table->double('latitude');
-            $table->integer('username_id');
+            $table->unsignedBigInteger('user_id');
         });
     }
 

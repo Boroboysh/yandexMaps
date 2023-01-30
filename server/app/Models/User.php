@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Http\Controllers\UserController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,6 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use \Backpack\CRUD\app\Models\Traits\CrudTrait;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -25,7 +27,6 @@ class User extends Authenticatable
         'name',
         'password',
         'email',
-        'is_admin'
     ];
 
     /**
@@ -37,4 +38,10 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function pointers()
+    {
+        return $this->hasMany(Pointers::class);
+    }
+
 }

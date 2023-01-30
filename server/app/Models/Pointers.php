@@ -11,6 +11,12 @@ class Pointers extends Model
         'name',
         'longitude',
         'latitude',
-        'username_id'
+        'user_id'
     ];
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+
 }

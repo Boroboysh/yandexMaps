@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,8 +19,6 @@ Route::get('/home', function () {
 });
 
 Route::get('/logout', [\App\Http\Controllers\LoginController::class, 'logout']);
-
-Route::get('/auth/status', [\App\Http\Controllers\LoginController::class, 'authStatus']);
 
 Route::post('/auth/signin', [\App\Http\Controllers\LoginController::class, 'authenticate']);
 

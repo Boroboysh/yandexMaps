@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -26,10 +28,7 @@ class LoginController extends Controller
     }
 
     public function authStatus () {
-        if (Auth::check()) {
-            return 'You status: authorized';
-        }
-        return 'You status: not authorized';
+        return User::find(1)->pointers->count();
     }
 
     public function register(Request $request)
@@ -51,7 +50,6 @@ class LoginController extends Controller
             'name' => $request->input('name'),
             'password' => Hash::make($request->input('password')),
             'email' => $request->input('email'),
-            'is_admin' => 0
         ]);
 
         $credentials = $request->validate([

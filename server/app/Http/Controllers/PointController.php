@@ -14,7 +14,7 @@ class PointController extends Controller
 {
     public function getPointList()
     {
-        $pointer_list = Pointers::select('*')->where("username_id", Auth::id())->get();
+        $pointer_list = Pointers::select('*')->where("user_id", Auth::id())->get();
 
         return $pointer_list;
     }
@@ -24,7 +24,7 @@ class PointController extends Controller
             'name' => $request->input('namePoint'),
             'longitude' => $request->input('longitude'),
             'latitude' => $request->input('latitude'),
-            'username_id' => Auth::id()
+            'user_id' => Auth::id()
         ]);
 
         // username_id Должен передаваться с фронта...?
