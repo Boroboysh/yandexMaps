@@ -8,14 +8,15 @@ import {Layout} from "@consta/uikit/Layout";
 import {Text} from "@consta/uikit/Text";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
-import {checkStatusApi, GetCurrentUsername} from "./components/api/api";
 import Profile from "./components/Profile/Profile";
 import {useDispatch, useSelector} from "react-redux";
+import {Button} from "@consta/uikit/Button";
+import {logoutApi} from "./components/api/api";
 
 function App() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const {login ,isLogged} = useSelector(state => state.login);
+    const {login , isLogged} = useSelector(state => state.login);
 
     // let [isLogged, setLogged] = useState(false);
     let [username, setUsername] = useState('Profile User');
@@ -25,7 +26,6 @@ function App() {
     useEffect(() => {
 
         // setLogged(true)
-np
         if (isLogged === true) {
             setUsername(login)
         }
@@ -49,10 +49,16 @@ np
                 } rightSide={
                     <>
                         <HeaderModule>
-                            <HeaderLogin isLogged={isLogged}
-                                         personName={username}
-                                         onClick={() => isLogged ? navigate('/profile') : navigate('/login')}
-                                         label='Войти'/>
+                            <HeaderLogin
+                                isLogged={isLogged}
+                                personName={login}
+                                onClick={() => isLogged ? navigate('/profile') : navigate('/login')}
+                                label='Войти'
+                            />
+
+                            {
+                                isLogged ? <Button label="Logout" onClick={() => dispatch(logoutApi())}/> : <></>
+                            }
                         </HeaderModule>
                     </>
                 }/>

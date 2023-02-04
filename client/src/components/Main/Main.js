@@ -6,35 +6,17 @@ import {useDispatch, useSelector} from "react-redux";
 import {setLatitude, setLongitude, setName} from "../../redux/features/pointer/pointerSlice";
 import {TextField} from "@consta/uikit/TextField";
 import {Button} from "@consta/uikit/Button";
+import {getPointerListApi} from "../api/api";
 
 let Main = ({isLogged}) => {
+    //TODO useEffect Redux
+
     let [state, setState] = useState([]);
     let [editStatus, setEditStatus] = useState(false)
 
     const pointerSelector = useSelector(state => state.pointer)
     const dispatch = useDispatch();
 
-    //TODO useEffect Redux
-
-    let addNewPoint = () => {
-        // state => change state => update state => state
-        //
-    }
-
-    let editPointer = (namePoint) => {
-        if (editStatus) {
-            setEditStatus(false)
-        } else {
-            setEditStatus(true)
-        }
-
-    }
-
-    let editInputChange = (namePoint) => {
-        state.filter((point) => {
-            return point.namePoint === namePoint
-        })
-    }
 
     async function create_token() {
         await axios.get('http://localhost:8000/sanctum/csrf-cookie').then(response => {
@@ -43,16 +25,7 @@ let Main = ({isLogged}) => {
         });
     }
 
-    async function logout() {
-        await axios.get('http://localhost:8000/auth/logout').then(response => {
-            // Profile...
-            console.log(response)
-
-        });
-    }
-
     if (!isLogged) {
-
         return (
             <div>
                 <h3>
@@ -67,10 +40,7 @@ let Main = ({isLogged}) => {
         <div className="wrap">
             <section className="buttonsWrapTest">
                 <button className="buttonTest" onClick={create_token}>Create Token</button>
-                <button className="buttonTest" onClick={logout}>Logout</button>
-                <button className="buttonTest" onClick={() => {
-                    console.log('Get List')
-                }}>Get LIST</button>
+                <button className="buttonTest" onClick={() => dispatch(getPointerListApi()) }>Get LIST</button>
             </section>
             <section className="locationListWrap">
                 <form>
@@ -101,7 +71,7 @@ let Main = ({isLogged}) => {
                     </label>
                 </form>
                 <Button label="Добавить" onClick={() => {
-                    console.log('Add new')
+                    console.log(pointerSelector)
                 }} size="s" id="buttonAddNew"/>
                 <section className="locationList">
                     <div className="locationList__title">
@@ -111,50 +81,24 @@ let Main = ({isLogged}) => {
                     </div>
                     <div>
                         {
-                            state.map((point, index) => {
-                                    if (editStatus) {
-                                        return (
-                                            <section key={index} className="locationList__element">
-                                                <span> <input type="text" value={point.namePoint} onChange={() => {
-                                                    editInputChange(point.namePoint)
-                                                }}/> |</span>
-                                                <span> <input type="text" value={point.longitude} onChange={() => {
-                                                    editInputChange(point.namePoint)
-                                                }}/> |</span>
-                                                <span> <input type="text" value={point.latitude} onChange={() => {
-                                                    editInputChange(point.namePoint)
-                                                }}/> </span>
-                                                <section className="locationList__element__buttons">
-                                                    <button onClick={() => {
-                                                        /*editPost(point.namePoint)*/
-                                                    }}>Готово
-                                                    </button>
-                                                    <button onClick={() => {
-                                                        console.log('pox')
-                                                    }}>Удалить
-                                                    </button>
-                                                </section>
-                                            </section>
-                                        )
-                                    } else {
-                                        return (
-                                            <section key={index} className="locationList__element">
-                                                <span> {point.name} |</span>
-                                                <span> {point.longitude} |</span>
-                                                <span> {point.latitude} </span>
-                                                <section className="locationList__element__buttons">
-                                                    <button onClick={() => {
-                                                        /*editPost(point.namePoint)*/
-                                                    }}>Редактировать
-                                                    </button>
-                                                    <button onClick={() => {
-                                                        console.log('Delete')
-                                                    }}>Удалить
-                                                    </button>
-                                                </section>
-                                            </section>
-                                        )
-                                    }
+                            pointerSelector.map((point, index) => {
+                                return (
+                                    <section key={index} className="locationList__element">
+                                        <span> {point.name} |</span>
+                                        <span> {point.longitude} |</span>
+                                        <span> {point.latitude} </span>
+                                        <section className="locationList__element__buttons">
+                                            <button onClick={() => {
+                                                /*editPost(point.namePoint)*/
+                                            }}>Редактировать
+                                            </button>
+                                            <button onClick={() => {
+                                                console.log('Delete')
+                                            }}>Удалить
+                                            </button>
+                                        </section>
+                                    </section>
+                                )
                                 }
                             )
                         }

@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {checkStatusApi, loginApi} from "../../../components/api/api";
+import {checkStatusApi, loginApi, logoutApi} from "../../../components/api/api";
 import {useNavigate} from "react-router";
 
 export const loginSlice = createSlice({
@@ -10,14 +10,6 @@ export const loginSlice = createSlice({
             // status: false
         },
         reducers: {
-            setEmail: (state, action) => {
-                state.email = action.payload
-                console.log(state.email)
-            },
-            setPassword: (state, action) => {
-                state.password = action.payload
-                console.log(state.password)
-            },
         },
         extraReducers: (builder) => {
             builder
@@ -29,29 +21,31 @@ export const loginSlice = createSlice({
                 })
                 .addCase(checkStatusApi.rejected, (state) => {
                     console.log('Rejected')
-                    // state.status = true;
                 })
 
                 .addCase(loginApi.pending, (state) => {
                     console.log('Pending...')
                 })
                 .addCase(loginApi.fulfilled, (state, {payload}) => {
-                    // const navigate = useNavigate();
-
                     state.login = payload.login;
                     state.isLogged = payload.isLogged
-
-                    // navigate('/')
                 })
                 .addCase(loginApi.rejected, (state) => {
                     console.log('Rejected')
                     // state.status = true;
 
                 })
+
+                .addCase(logoutApi.fulfilled, (state) => {
+
+
+                    state.login = '';
+                    state.isLogged = false
+                })
         }
     }
 )
 
-export const {setEmail, setPassword} = loginSlice.actions;
+// export const {setEmail, setPassword} = loginSlice.actions;
 
 export default loginSlice.reducer;

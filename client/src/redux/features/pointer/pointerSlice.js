@@ -1,12 +1,9 @@
 import {createSlice} from "@reduxjs/toolkit";
+import {getPointerListApi} from "../../../components/api/api";
 
 export const pointerSlice = createSlice({
     name: 'pointer',
-    initialState: {
-        name: '',
-        longitude: '',
-        latitude: ''
-    },
+    initialState: [],
     reducers: {
         setName: (state, action) => {
             state.name = action.payload
@@ -21,6 +18,16 @@ export const pointerSlice = createSlice({
         editPointer: (state, action) => {
 
         }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(getPointerListApi.fulfilled, (state, {payload}) => {
+                debugger
+                console.log(payload);
+
+
+                // state = payload
+            })
     }
 })
 

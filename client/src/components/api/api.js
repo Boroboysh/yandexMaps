@@ -16,7 +16,7 @@ export const signUp = createAsyncThunk(
 export const checkStatusApi = createAsyncThunk(
     'auth/status',
     async (payload) => {
-        return await axios.get('https://localhost:8000/auth/status');
+        return await axios.get('http://localhost:8000/auth/status');
     });
 
 export const loginApi = createAsyncThunk(
@@ -24,9 +24,39 @@ export const loginApi = createAsyncThunk(
     async (payload) => {
         return await axios.post('http://localhost:8000/auth/login', payload, {
             withCredentials: true
+        }).then((response) => {
+            console.log(response.data)
+
+            return response.data
         })
-}
+    })
+
+export const logoutApi = createAsyncThunk(
+    'auth/logout',
+    async () => {
+        return await axios.get('http://localhost:8000/auth/logout', {
+            withCredentials: true
+        })
+    }
 )
+
+
+export const getPointerListApi = createAsyncThunk(
+    'pointer/list',
+    async (payload) => {
+        await axios.get('http://localhost:8000/list', {
+            withCredentials: true
+        })
+            .then((response) => {
+                console.log(response.data)
+
+                debugger;
+
+                return response.data;
+            });
+    }
+)
+
 
 /*export async function CheckStatusApi() {
     await axios.get('https://localhost:8080/auth/status')
