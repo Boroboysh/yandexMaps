@@ -36,6 +36,6 @@ Route::middleware('auth:sanctum')->get('/list', [\App\Http\Controllers\PointCont
 
 Route::middleware('auth:sanctum')->post('/new_point', [\App\Http\Controllers\PointController::class, 'newPoint']);
 
-Route::middleware('auth:sanctum')->delete('/deletePoint', [\App\Http\Controllers\PointController::class, 'deletePoint']);
+Route::middleware('auth:sanctum')->delete('/deletePoint/{id}', [\App\Http\Controllers\PointController::class, 'deletePoint']);
 
 Route::middleware('auth:sanctum')->get('/user/name', [\App\Http\Controllers\LoginController::class, 'getCurrentUsername']);

@@ -14,18 +14,16 @@ class PointController extends Controller
 {
     public function getPointList()
     {
-        $pointer_list = Pointers::select('*')->where("user_id", Auth::id())->get();
 
-        return $pointer_list;
+        return Pointers::select('*')->where("user_id", Auth::id())->get();
     }
 
     public function newPoint (Request $request) {
-        $credentials = $request->validate([
+   /*     $credentials = $request->validate([
             'name' => ['required'],
             'longitude' => ['required'],
             'latitude' => ['required']
-        ]);
-        ;
+        ]);*/
 
         Pointers::create([
             'name' => $request->input('namePoint'),
@@ -40,8 +38,8 @@ class PointController extends Controller
         return response('OK', 200);
     }
 
-    public function deletePoint (Request $request) {
-        Pointers::destroy($request->input('id'));
+    public function deletePoint ($id) {
+        Pointers::where('id', $id)->delete();
 
         return response('Deleted', 200);
     }

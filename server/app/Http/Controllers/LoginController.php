@@ -20,9 +20,9 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-
+            
             $user = [
-                'login' => 'lololoshka',
+                'login' => Auth::user()->name,
                 'isLogged' => true
             ];
 
