@@ -20,6 +20,13 @@ class PointController extends Controller
     }
 
     public function newPoint (Request $request) {
+        $credentials = $request->validate([
+            'name' => ['required'],
+            'longitude' => ['required'],
+            'latitude' => ['required']
+        ]);
+        ;
+
         Pointers::create([
             'name' => $request->input('namePoint'),
             'longitude' => $request->input('longitude'),

@@ -1,20 +1,14 @@
-import React, {useState} from "react";
-import styles from './register.module.css'
-import {GeolocationControl, Placemark, YMaps} from "@pbe/react-yandex-maps";
-import axios from "axios";
+import React, {useState} from 'react';
+import styles from "../Login/register.module.css";
+import {Text} from "@consta/uikit/Text";
+import {Layout} from "@consta/uikit/Layout";
+import {TextField} from "@consta/uikit/TextField";
+import {Button} from "@consta/uikit/Button";
 
-let Register = () => {
+const Register = ({navigate}) => {
     let [formState, setFormState] = useState({});
-    const config = {
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-        },
-    }
-    axios.defaults.withCredentials = true;
 
-    let inputChange = (event) => {
+    const inputChange = (event) => {
         let name = event.target.name;
         let value = event.target.value;
 
@@ -23,39 +17,31 @@ let Register = () => {
         })
     }
 
-    async function register() {
-        console.log('Process started')
-
-        let user = {
-            name: 'Tester1',
-            password: 'test'
-        }
-
-        let json = JSON.stringify(user);
-
-        await axios.post('http://127.0.0.1:8000/register', json, config)
-            .then((response) => {
-                console.log(response)
-            })
-    }
-
-
     return (
         <div className={styles.wrap}>
-            Регистрация
+            <Text>
+                Регистрация
+            </Text>
             <section>
                 <form>
-                    <label htmlFor="login">
-                        Login: <input type="text" name="name" onChange={inputChange}/>
-                    </label>
-                    <label htmlFor="password">
-                        Password: <input type="password" name="password" onChange={inputChange}/>
-                    </label>
+                    <Layout direction='column'>
+                        <TextField label="Name" type="text" name="name" onChange={inputChange}/>
+                        <TextField label="Email" type="email" name="email" onChange={inputChange}/>
+                        <TextField label='Password' type="password" name="password" onChange={inputChange}/>
+                    </Layout>
+
                 </form>
-                <button onClick={register}>Зарегистрироваться</button>
+                <Button label={'Зарегистрироваться'} view={'secondary'} onClick={() => {
+                    console.log('Register')
+                }}/>
+
+                <Text style={{cursor: "pointer"}} view="brand" onClick={() => navigate('/login')}>
+                    Уже зарегистрированы?
+                </Text>
+
             </section>
         </div>
-    )
-}
+    );
+};
 
 export default Register;

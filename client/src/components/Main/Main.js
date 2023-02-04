@@ -1,37 +1,27 @@
-import React, {useEffect, useState} from "react";
-import styles from './main.css'
+import React, {useState} from "react";
+import "./main.css";
 import {GeolocationControl, Map, Placemark, YMaps} from "@pbe/react-yandex-maps";
 import axios from "axios";
+import {useDispatch, useSelector} from "react-redux";
+import {setLatitude, setLongitude, setName} from "../../redux/features/pointer/pointerSlice";
+import {TextField} from "@consta/uikit/TextField";
+import {Button} from "@consta/uikit/Button";
 
-let Main = () => {
+let Main = ({isLogged}) => {
     let [state, setState] = useState([]);
-    let [newPointState, setNewPointState] = useState({
-        namePoint: "",
-        longitude: 0,
-        latitude: 0,
-    })
     let [editStatus, setEditStatus] = useState(false)
 
-    const config = {
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-        },
+    const pointerSelector = useSelector(state => state.pointer)
+    const dispatch = useDispatch();
+
+    //TODO useEffect Redux
+
+    let addNewPoint = () => {
+        // state => change state => update state => state
+        //
     }
 
-    axios.defaults.withCredentials = true;
-
-    let inputChange = (event) => {
-        let name = event.target.name;
-        let value = event.target.value;
-
-        setNewPointState({
-            ...newPointState, [name]: value
-        })
-    }
-
-    let editPost = (namePoint) => {
+    let editPointer = (namePoint) => {
         if (editStatus) {
             setEditStatus(false)
         } else {
@@ -46,82 +36,73 @@ let Main = () => {
         })
     }
 
-    async function auth() {
-        console.log('Process started')
-
-        let user = {
-            name: 'Tester1',
-            password: 'test'
-        }
-
-        let json = JSON.stringify(user);
-
-        await axios.post('http://127.0.0.1:8000/auth', json, config)
-            .then((response) => {
-                console.log(response)
-            })
-    }
-
-    async function addNewPoint() {
-        let jsonPoint = JSON.stringify(newPointState);
-
-        await axios.post('http://127.0.0.1:8000/new_point', jsonPoint, config)
-            .then((response) => {
-                console.log(response)
-                getPointerList();
-            })
-    }
-
-    async function deletePoint(id) {
-        await axios.delete('http://127.0.0.1:8000/deletePoint', {data: {id: id}})
-            .then(response => {
-                console.log(response)
-                getPointerList();
-            })
-    }
-
-    async function getPointerList() {
-        await axios.get('http://127.0.0.1:8000/list')
-            .then((response) => {
-                setState(response.data)
-            })
-    }
-
     async function create_token() {
-        await axios.get('http://127.0.0.1:8000/sanctum/csrf-cookie').then(response => {
-            // Login...
+        await axios.get('http://localhost:8000/sanctum/csrf-cookie').then(response => {
+            // Profile...
             console.log('Token created')
         });
     }
 
     async function logout() {
-        await axios.get('http://127.0.0.1:8000/logout').then(response => {
-            // Login...
+        await axios.get('http://localhost:8000/auth/logout').then(response => {
+            // Profile...
             console.log(response)
+
         });
     }
+
+    if (!isLogged) {
+
+        return (
+            <div>
+                <h3>
+                    Информация о проекте
+                </h3>
+            </div>
+        )
+    }
+
 
     return (
         <div className="wrap">
             <section className="buttonsWrapTest">
-                <button className="buttonTest" onClick={auth}>Auth</button>
                 <button className="buttonTest" onClick={create_token}>Create Token</button>
                 <button className="buttonTest" onClick={logout}>Logout</button>
-                <button className="buttonTest" onClick={getPointerList}>Get LIST</button>
+                <button className="buttonTest" onClick={() => {
+                    console.log('Get List')
+                }}>Get LIST</button>
             </section>
             <section className="locationListWrap">
                 <form>
                     <label htmlFor="namePoint">
-                        Название: <input onChange={inputChange} type="text" name="namePoint"/>
+                        <TextField label="Название: "
+                                   onChange={(e) => dispatch(setName(e.value))}
+                                   type="text"
+                                   value={pointerSelector.name}
+                                   size="s"
+
+                        />
                     </label>
                     <label htmlFor="longitude">
-                        Долгота: <input onChange={inputChange} type="text" name="longitude"/>
+                        <TextField label="Долгота: "
+                                   onChange={(e) => dispatch(setLongitude(e.value))}
+                                   type="text"
+                                   value={pointerSelector.longitude}
+                                   size="s"
+                        />
                     </label>
                     <label htmlFor="latitude">
-                        Широта: <input onChange={inputChange} type="text" name="latitude"/>
+                        <TextField label="Широта: "
+                                   onChange={(e) => dispatch(setLatitude(e.value))}
+                                   type="text"
+                                   value={pointerSelector.latitude}
+                                   size="s"
+                        />
                     </label>
                 </form>
-                <button onClick={addNewPoint}>Добавить</button>
+                <Button label="Добавить" onClick={() => {
+                    console.log('Add new')
+                }} size="s" id="buttonAddNew"/>
                 <section className="locationList">
                     <div className="locationList__title">
                         <span>Название |</span>
@@ -145,11 +126,11 @@ let Main = () => {
                                                 }}/> </span>
                                                 <section className="locationList__element__buttons">
                                                     <button onClick={() => {
-                                                        editPost(point.namePoint)
+                                                        /*editPost(point.namePoint)*/
                                                     }}>Готово
                                                     </button>
                                                     <button onClick={() => {
-                                                        deletePoint(point.id)
+                                                        console.log('pox')
                                                     }}>Удалить
                                                     </button>
                                                 </section>
@@ -163,11 +144,11 @@ let Main = () => {
                                                 <span> {point.latitude} </span>
                                                 <section className="locationList__element__buttons">
                                                     <button onClick={() => {
-                                                        editPost(point.namePoint)
+                                                        /*editPost(point.namePoint)*/
                                                     }}>Редактировать
                                                     </button>
                                                     <button onClick={() => {
-                                                        deletePoint(point.id)
+                                                        console.log('Delete')
                                                     }}>Удалить
                                                     </button>
                                                 </section>

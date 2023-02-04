@@ -21,13 +21,19 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return response('You authorized');
+            $user = [
+                'login' => 'lololoshka',
+                'isLogged' => true
+            ];
+
+            return response($user, 200);
         }
 
         return response('You not authorized');
     }
 
-    public function authStatus () {
+    public function authStatus()
+    {
         return User::find(1)->pointers->count();
     }
 
@@ -77,7 +83,13 @@ class LoginController extends Controller
         return 'Session logout delete id ok';
     }
 
-    public function createAdmin () {
+    public function status()
+    {
+        return Auth::check();
+    }
+
+    public function createAdmin()
+    {
         Admin::create([
             'name' => 'admin1',
             'email' => 'admin@gmail.com',
@@ -85,6 +97,11 @@ class LoginController extends Controller
         ]);
 
         return 'OK';
+    }
+
+    public function getCurrentUsername()
+    {
+        return Auth::user()->name;
     }
 
 }
