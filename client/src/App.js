@@ -1,7 +1,7 @@
 import './App.css';
 import {Route, Routes, useNavigate} from "react-router";
 import Main from "./components/Main/Main";
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 import {Header, HeaderLogin, HeaderModule} from "@consta/uikit/Header";
 import {Layout} from "@consta/uikit/Layout";
@@ -11,28 +11,23 @@ import Register from "./components/Register/Register";
 import Profile from "./components/Profile/Profile";
 import {useDispatch, useSelector} from "react-redux";
 import {Button} from "@consta/uikit/Button";
-import {logoutApi} from "./components/api/api";
+import {create_token, logoutApi} from "./api/api";
+import {YMaps} from "@pbe/react-yandex-maps";
+import {setLogin} from "./redux/features/auth/authSlice";
 
 function App() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const {login , isLogged} = useSelector(state => state.login);
+    const {login, isLogged, errorValidate} = useSelector(state => state.login);
 
-    // let [isLogged, setLogged] = useState(false);
-    let [username, setUsername] = useState('Profile User');
+    if (!window.localStorage.getItem('sanctum-csrf-status')) {
+        //true / false
+        create_token();
+    }
 
-    // const {data, error, isLoading} = useGetAuthStatus();
-
-    useEffect(() => {
-
-        // setLogged(true)
-        if (isLogged === true) {
-            setUsername(login)
-        }
-
-    }, [])
-
-
+    if (window.localStorage.getItem('login_ymaps')) {
+        dispatch(setLogin(window.localStorage.getItem('login_ymaps')))
+    }
 
     return (
         <Theme preset={presetGpnDefault}>
@@ -63,13 +58,14 @@ function App() {
                     </>
                 }/>
             </Layout>
-            <Routes>
-                <Route element={<Login navigate={navigate} dispatch={dispatch}/>} path="/login"/>
-                <Route element={<Register navigate={navigate}/>} path="/register"/>
-                <Route element={<Main isLogged={isLogged} />} path="/"/>
-                <Route element={<Profile />} path="/profile"/>
-            </Routes>
-
+            <YMaps>
+                <Routes>
+                    <Route element={ <Login isLogged={isLogged} navigate={navigate} dispatch={dispatch} errorValidate={errorValidate}/> } path="/login"/>
+                    <Route element={ <Register navigate={navigate} dispatch={dispatch} errorValidate={errorValidate}/> }  path="/register" />
+                    <Route element={ <Main isLogged={isLogged} dispatch={dispatch}/> } path="/"/>
+                    <Route element={ <Profile/> } path="/profile"/>
+                </Routes>
+            </YMaps>
         </Theme>
 
     );

@@ -1,6 +1,6 @@
 import {configureStore, getDefaultMiddleware} from "@reduxjs/toolkit";
 import pointerReducer from "../features/pointer/pointerSlice";
-import loginReducer from "../features/login/loginSlice";
+import loginReducer from "../features/auth/authSlice";
 
 export default configureStore({
     reducer: {

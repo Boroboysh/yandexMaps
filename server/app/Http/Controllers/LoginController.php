@@ -8,11 +8,24 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
     public function authenticate(Request $request)
     {
+        $data = $request->only( 'email', 'password');
+
+        $validator = Validator::make($data, [
+            'email' => 'required|email:rfc,dns',
+            'password' => 'required|string',
+        ]);
+
+        //Send failed response if request is not valid
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->messages()]);
+        }
+
         $credentials = $request->validate([
             'email' => ['required'],
             'password' => ['required'],
@@ -20,7 +33,7 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            
+
             $user = [
                 'login' => Auth::user()->name,
                 'isLogged' => true
@@ -29,34 +42,37 @@ class LoginController extends Controller
             return response($user, 200);
         }
 
-        return response('You not authorized');
-    }
+        $errLogin = [
+            'error' => [
+                'loginErr' => ["Invalid email or password"]
+            ]
+        ];
 
-    public function authStatus()
-    {
-        return User::find(1)->pointers->count();
+        return response()->json($errLogin);
     }
 
     public function register(Request $request)
     {
         //Validate data
-        /*       $data = $request->only('name', 'password');
-               $validator = Validator::make($data, [
-                   'name' => 'required|string',
-                   'password' => 'required|string|min:6|max:50'
-               ]);
+        $data = $request->only('name', 'email', 'password');
 
-               //Send failed response if request is not valid
-               if ($validator->fails()) {
-                   return response()->json(['error' => $validator->messages()]);
-               }*/
+        $validator = Validator::make($data, [
+            'name' => 'required|string',
+            'email' => 'required|email:rfc,dns',
+            'password' => 'required|string|min:6|max:50',
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->messages()]);
+        }
 
         User::create([
             'name' => $request->input('name'),
             'password' => Hash::make($request->input('password')),
             'email' => $request->input('email'),
         ]);
+
+        // Refactoring
 
         $credentials = $request->validate([
             'email' => ['required'],

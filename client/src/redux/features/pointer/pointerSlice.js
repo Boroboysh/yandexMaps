@@ -1,36 +1,58 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {getPointerListApi} from "../../../components/api/api";
+import {createNewPoint, deletePointApi, getPointerListApi, updatePointApi} from "../../../api/api";
 
 export const pointerSlice = createSlice({
     name: 'pointer',
-    initialState: [],
+    initialState: {
+        pointers: []
+    },
     reducers: {
-        setName: (state, action) => {
-            state.name = action.payload
-            console.log(state.name)
+        editName: (state, {payload}) => {
+            state.pointers[payload.indexElement].name = payload.name
         },
-        setLongitude: (state, action) => {
-            state.longitude = action.payload
+        editLongitude: (state, {payload}) => {
+            console.log(`State : ${state.pointers[payload]}`)
+
         },
-        setLatitude: (state, action) => {
-            state.latitude = action.payload
+        editLatitude: (state, {payload}) => {
+            console.log(`State : ${state.pointers[payload]}`)
         },
-        editPointer: (state, action) => {
+        updatePointerList: (state, {payload}) => {
 
         }
     },
     extraReducers: (builder) => {
         builder
             .addCase(getPointerListApi.fulfilled, (state, {payload}) => {
-                debugger
-                console.log(payload);
+                // debugger
+                // console.log(payload);
 
+                state.pointers = payload.data;
 
                 // state = payload
+            })
+
+            .addCase(createNewPoint.fulfilled, (state, {payload}) => {
+                // state.pointers.push(payload.data)
+                // state.pointers = [...state.pointers, payload]
+                state.pointers = payload.data
+                alert('Point created');
+
+            })
+
+            .addCase(deletePointApi.fulfilled, (state, {payload}) => {
+                state.pointers = payload.data
+                alert('Deleted')
+            })
+
+            .addCase(updatePointApi.fulfilled, (state, {payload}) => {
+                state.pointers = payload.data
+                alert('Updated');
+
             })
     }
 })
 
-export const { setName, setLongitude, setLatitude, editPointer} = pointerSlice.actions;
+export const {editName, editLatitude, editLongitude, updatePointerList} = pointerSlice.actions;
 
 export default pointerSlice.reducer;
