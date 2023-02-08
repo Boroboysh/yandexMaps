@@ -14,18 +14,17 @@ class PointController extends Controller
 {
     public function getPointList()
     {
-        $pointer_list = Pointers::select('*')->where("user_id", Auth::id())->get();
 
-        return $pointer_list;
+        return Pointers::select('*')->where("user_id", Auth::id())->get();
     }
 
-    public function newPoint (Request $request) {
-        $credentials = $request->validate([
-            'name' => ['required'],
-            'longitude' => ['required'],
-            'latitude' => ['required']
-        ]);
-        ;
+    public function newPoint(Request $request)
+    {
+        /*     $credentials = $request->validate([
+                 'name' => ['required'],
+                 'longitude' => ['required'],
+                 'latitude' => ['required']
+             ]);*/
 
         Pointers::create([
             'name' => $request->input('namePoint'),
@@ -37,13 +36,25 @@ class PointController extends Controller
         // username_id Должен передаваться с фронта...?
         // Передается api ключ, ищется в таблцие users юзер с этим ключом, возвращается id usera таким ключом и записывается в username_id
 
-        return response('OK', 200);
+        return Pointers::select('*')->where("user_id", Auth::id())->get();
     }
 
-    public function deletePoint (Request $request) {
-        Pointers::destroy($request->input('id'));
+    public function updatePoint($id, Request $request)
+    {
+        Pointers::where('id', $id)->update([
+            'name' => $request->input('name'),
+            'longitude' => $request->input('longitude'),
+            'latitude' => $request->input('latitude')
+        ]);
 
-        return response('Deleted', 200);
+        return Pointers::select('*')->where("user_id", Auth::id())->get();
+    }
+
+    public function deletePoint($id)
+    {
+        Pointers::where('id', $id)->delete();
+
+        return Pointers::select('*')->where("user_id", Auth::id())->get();
     }
 }
 

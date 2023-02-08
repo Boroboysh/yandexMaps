@@ -1,20 +1,31 @@
 import * as React from 'react';
 import {Layout} from "@consta/uikit/Layout";
 import {Text} from "@consta/uikit/Text";
-import {useState} from "react";
+import {Navigate} from "react-router";
+let Profile = ({login}) => {
+    let styles = {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '20px',
+        padding: '10px 0px 10px 10px',
+    }
 
-let Profile = () => {
-    let {name, setName} = useState('...');
+    let loginStyle = {
+        fontWeight: '600'
+    }
 
-    // setName(GetCurrentUsername())
+    if (!window.localStorage.getItem('isLogged')) {
+        return <Navigate to='/login' />
+    }
 
     return (
-        <Layout>
-            <Text>
-                Your Profile
+        <Layout style={styles}>
+            <Text size="2xl">
+                Ваш профиль:
             </Text>
-            <Text>
-                {name}
+            <Text style={loginStyle} size="2xl">
+                {login}
             </Text>
         </Layout>
     );

@@ -15,6 +15,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    /*align-items: center;*/
 }
 
 .form_wrap form {
@@ -29,11 +30,12 @@
     margin-top: 10px;
 }
 
-.loginLink {
+.registerLink {
     text-align: center;
     margin-top: 10px;
 }
 
 .errorValidate {
     margin-top: 10px;
+
 }

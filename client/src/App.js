@@ -1,38 +1,32 @@
 import './App.css';
 import {Route, Routes, useNavigate} from "react-router";
 import Main from "./components/Main/Main";
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {presetGpnDefault, Theme} from "@consta/uikit/Theme";
 import {Header, HeaderLogin, HeaderModule} from "@consta/uikit/Header";
 import {Layout} from "@consta/uikit/Layout";
 import {Text} from "@consta/uikit/Text";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
-import {checkStatusApi, GetCurrentUsername} from "./components/api/api";
 import Profile from "./components/Profile/Profile";
 import {useDispatch, useSelector} from "react-redux";
+import {Button} from "@consta/uikit/Button";
+import {checkAuthApi, create_token, logoutApi} from "./api/api";
+import {YMaps} from "@pbe/react-yandex-maps";
 
 function App() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const {login ,isLogged} = useSelector(state => state.login);
+    const {login, errorValidate, status} = useSelector(state => state.login);
 
-    // let [isLogged, setLogged] = useState(false);
-    let [username, setUsername] = useState('Profile User');
-
-    // const {data, error, isLoading} = useGetAuthStatus();
+    if (!window.localStorage.getItem('sanctum-csrf-status')) {
+        //sanctum-csrf-status true / false
+        create_token();
+    }
 
     useEffect(() => {
-
-        // setLogged(true)
-np
-        if (isLogged === true) {
-            setUsername(login)
-        }
-
+        dispatch(checkAuthApi())
     }, [])
-
-
 
     return (
         <Theme preset={presetGpnDefault}>
@@ -49,21 +43,31 @@ np
                 } rightSide={
                     <>
                         <HeaderModule>
-                            <HeaderLogin isLogged={isLogged}
-                                         personName={username}
-                                         onClick={() => isLogged ? navigate('/profile') : navigate('/login')}
-                                         label='Войти'/>
+                            <HeaderLogin
+                                isLogged={login }
+                                personName={login}
+                                onClick={() =>  login ? navigate('/profile') : navigate('/login')}
+                                label='Войти'
+                            />
+
+                            {
+                                login  ? <Button label="Выйти" onClick={() => dispatch(logoutApi())}/> : <></>
+                            }
                         </HeaderModule>
                     </>
                 }/>
             </Layout>
-            <Routes>
-                <Route element={<Login navigate={navigate} dispatch={dispatch}/>} path="/login"/>
-                <Route element={<Register navigate={navigate}/>} path="/register"/>
-                <Route element={<Main isLogged={isLogged} />} path="/"/>
-                <Route element={<Profile />} path="/profile"/>
-            </Routes>
+            <YMaps>
+                <Routes>
+                    <Route element={<Login isLogged={login} navigate={navigate} dispatch={dispatch}
+                                           errorValidate={errorValidate}/>} path="/login"/>
+                    <Route element={<Register isLogged={login} navigate={navigate} dispatch={dispatch} errorValidate={errorValidate} />}
+                           path="/register"/>
+                    <Route element={<Main isLogged={ login} dispatch={dispatch} status={status}/>} path="/"/>
+                    <Route element={<Profile login={login}/>} path="/profile"/>
+                </Routes>
 
+            </YMaps>
         </Theme>
 
     );
