@@ -4,7 +4,7 @@ import {Map, Placemark, ZoomControl} from "@pbe/react-yandex-maps";
 import {useSelector} from "react-redux";
 import {TextField} from "@consta/uikit/TextField";
 import {Button} from "@consta/uikit/Button";
-import {createNewPoint, deletePointApi, getPointerListApi, updatePointApi} from "../../api/api";
+import {createNewPoint, getPointerListApi} from "../../api/api";
 import {Text} from "@consta/uikit/Text";
 import {Layout} from "@consta/uikit/Layout";
 import {setIsLogged} from "../../redux/features/auth/authSlice";
@@ -21,10 +21,6 @@ let Main = ({isLogged, dispatch}) => {
     const [namePoint, setNamePoint] = useState();
     const [longitude, setLongitude] = useState();
     const [latitude, setLatitude] = useState();
-
-    const [isEditing, setIsEditing] = useState(false);
-
-    const [list, setList] = useState([])
 
     if (window.localStorage.getItem('isLogged')) {
         dispatch(setIsLogged(true))
@@ -51,9 +47,6 @@ let Main = ({isLogged, dispatch}) => {
 
     useEffect(() => {
         if (pointerSelector.pointers.length === 0) {
-            console.log('get pointer list')
-            console.log(pointerSelector.pointers.length)
-
             dispatch(getPointerListApi())
         }
     })
@@ -118,7 +111,9 @@ let Main = ({isLogged, dispatch}) => {
                     <div>
                         {
                             pointerSelector.pointers.map((point, index) => {
-                                return <StateEditing key={index} indexArray={index} point={point} dispatch={dispatch} setCentredCoordinates={setCentredCoordinates} pointerSelector={pointerSelector}/>
+                                return <StateEditing key={index} indexArray={index} point={point} dispatch={dispatch}
+                                                     setCentredCoordinates={setCentredCoordinates}
+                                                     pointerSelector={pointerSelector}/>
                             })
                         }
                     </div>

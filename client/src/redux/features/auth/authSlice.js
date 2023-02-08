@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {checkStatusApi, loginApi, logoutApi, registerApi} from "../../../api/api";
+import {loginApi, logoutApi, registerApi} from "../../../api/api";
 
 export const authSlice = createSlice({
         name: 'login',
@@ -28,17 +28,6 @@ export const authSlice = createSlice({
         },
         extraReducers: (builder) => {
             builder
-                .addCase(checkStatusApi.pending, (state) => {
-                    console.log('Pending...')
-                })
-                .addCase(checkStatusApi.fulfilled, (state, {payload}) => {
-                    console.log('Fulfilled')
-                })
-                .addCase(checkStatusApi.rejected, (state) => {
-                    console.log('Rejected')
-                })
-
-
                 .addCase(loginApi.pending, (state) => {
                     console.log('Pending...')
                 })
@@ -46,11 +35,8 @@ export const authSlice = createSlice({
                     let indexArray = 0;
                     let errorsArray = []
 
-                    state.errorValidate.map(() => {})
-
                     for (let key in payload.data.error) {
                         errorsArray[indexArray] = payload.data.error[key][0]
-
                         indexArray++;
                     }
 
@@ -60,6 +46,7 @@ export const authSlice = createSlice({
                     console.log(payload)
                     // output current errors
                     console.log(errorsArray)
+
                     state.errorValidate = errorsArray
 
                     if (state.errorValidate.length === 0) {
@@ -76,13 +63,11 @@ export const authSlice = createSlice({
                 .addCase(loginApi.rejected, (state) => {
                     console.log('Rejected')
                     // state.status = true;
-
                 })
 
                 .addCase(logoutApi.fulfilled, (state) => {
                     state.login = '';
                     state.isLogged = false
-
                     window.localStorage.removeItem('isLogged')
                 })
 
@@ -91,11 +76,8 @@ export const authSlice = createSlice({
                     let indexArray = 0;
                     let errorsArray = []
 
-                    state.errorValidate.map(() => {})
-
                     for (let key in payload.data.error) {
                         errorsArray[indexArray] = payload.data.error[key][0]
-
                         indexArray++;
                     }
 

@@ -21,7 +21,7 @@ function App() {
     const {login, isLogged, errorValidate} = useSelector(state => state.login);
 
     if (!window.localStorage.getItem('sanctum-csrf-status')) {
-        //true / false
+        //sanctum-csrf-status true / false
         create_token();
     }
 
@@ -63,7 +63,7 @@ function App() {
                     <Route element={ <Login isLogged={isLogged} navigate={navigate} dispatch={dispatch} errorValidate={errorValidate}/> } path="/login"/>
                     <Route element={ <Register navigate={navigate} dispatch={dispatch} errorValidate={errorValidate}/> }  path="/register" />
                     <Route element={ <Main isLogged={isLogged} dispatch={dispatch}/> } path="/"/>
-                    <Route element={ <Profile/> } path="/profile"/>
+                    <Route element={ <Profile login={login} /> } path="/profile"/>
                 </Routes>
             </YMaps>
         </Theme>
