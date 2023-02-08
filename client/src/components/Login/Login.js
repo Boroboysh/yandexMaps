@@ -12,7 +12,7 @@ let Login = ({navigate, dispatch, isLogged, errorValidate}) => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
 
-    if (window.localStorage.getItem('isLogged')) {
+    if (isLogged) {
         return <Navigate to='/' />
     }
 
@@ -26,14 +26,14 @@ let Login = ({navigate, dispatch, isLogged, errorValidate}) => {
                     <Layout direction='column'>
                         <TextField onChange={(e) => setEmail(e.value)}
                                    className={styles.textfield}
-                                   label="Email"
+                                   label="E-mail"
                                    type="email"
                                    value={email}
                                    required
                         />
                         <TextField onChange={(e) => setPassword(e.value)}
                                    className={styles.textfield}
-                                   label='Password'
+                                   label='Пароль'
                                    type="password"
                                    value={password}
                                    required

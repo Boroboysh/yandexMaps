@@ -22,7 +22,7 @@ let Profile = ({login}) => {
     return (
         <Layout style={styles}>
             <Text size="2xl">
-                Your Profile:
+                Ваш профиль:
             </Text>
             <Text style={loginStyle} size="2xl">
                 {login}

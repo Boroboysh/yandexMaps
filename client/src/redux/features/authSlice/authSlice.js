@@ -1,35 +1,30 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {loginApi, logoutApi, registerApi} from "../../../api/api";
+import {checkAuthApi, loginApi, logoutApi, registerApi} from "../../../api/api";
 
 export const authSlice = createSlice({
         name: 'login',
         initialState: {
-            login: '',
-            isLogged: false,
+            login: undefined,
+            status: 'idle',
             errorValidate: []
-                // name: 'test',
-                // email: '',
-                // password: ''
-
-            // status: false
         },
-        reducers: {
-            setIsLogged: (state, {payload}) => {
-                state.isLogged = payload;
-
-                window.localStorage.setItem('isLogged', payload);
-            },
-            setLogin: (state, {payload}) => {
-                state.login = payload;
-
-                window.localStorage.setItem('login_ymaps', payload)
-            },
-
-        },
+        reducers: {},
         extraReducers: (builder) => {
             builder
+                .addCase(checkAuthApi.fulfilled, (state, {payload}) => {
+                    state.login = payload.data.name;
+                    state.status = 'idle';
+                })
+                .addCase(checkAuthApi.pending, (state) => {
+                    state.status = 'pending';
+                })
+                .addCase(checkAuthApi.rejected, (state) => {
+                    state.status = 'idle';
+                })
+
+
                 .addCase(loginApi.pending, (state) => {
-                    console.log('Pending...')
+                    state.status = 'pending';
                 })
                 .addCase(loginApi.fulfilled, (state, {payload}) => {
                     let indexArray = 0;
@@ -42,35 +37,27 @@ export const authSlice = createSlice({
 
                     // clearing current errors
                     state.errorValidate = []
-
-                    console.log(payload)
-                    // output current errors
-                    console.log(errorsArray)
-
                     state.errorValidate = errorsArray
 
                     if (state.errorValidate.length === 0) {
-                        state.login = payload.data.login;
-                        state.isLogged = payload.data.isLogged
+                        state.login = payload.data.name;
 
-                        window.localStorage.setItem('login_ymaps', payload.data.login)
-                        window.localStorage.setItem('isLogged', true);
-
-                        alert('Вы вошли! Теперь можете вернуться на главную')
+                        alert('You are logged in')
                     }
 
                 })
                 .addCase(loginApi.rejected, (state) => {
-                    console.log('Rejected')
-                    // state.status = true;
+                    alert('Timeout');
                 })
 
                 .addCase(logoutApi.fulfilled, (state) => {
-                    state.login = '';
-                    state.isLogged = false
-                    window.localStorage.removeItem('isLogged')
+                    state.login = undefined;
+                    state.status = 'idle';
                 })
-
+                .addCase(logoutApi.pending, (state) => {
+                    state.status = 'pending';
+                })
+                // .addCase(logoutApi)
 
                 .addCase(registerApi.fulfilled, (state, {payload}) => {
                     let indexArray = 0;
@@ -86,11 +73,13 @@ export const authSlice = createSlice({
 
                     // output current errors
                     state.errorValidate = errorsArray
+
+                    alert(payload.data)
                 })
         }
     }
 )
 
-export const {setIsLogged, setLogin} = authSlice.actions;
+export const {} = authSlice.actions;
 
 export default authSlice.reducer;

@@ -4,55 +4,53 @@ import {createNewPoint, deletePointApi, getPointerListApi, updatePointApi} from 
 export const pointerSlice = createSlice({
     name: 'pointer',
     initialState: {
-        pointers: []
+        pointers: [],
+        status: 'idle'
     },
-    reducers: {
-        editName: (state, {payload}) => {
-            state.pointers[payload.indexElement].name = payload.name
-        },
-        editLongitude: (state, {payload}) => {
-            console.log(`State : ${state.pointers[payload]}`)
-
-        },
-        editLatitude: (state, {payload}) => {
-            console.log(`State : ${state.pointers[payload]}`)
-        },
-        updatePointerList: (state, {payload}) => {
-
-        }
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(getPointerListApi.fulfilled, (state, {payload}) => {
-                // debugger
-                // console.log(payload);
-
                 state.pointers = payload.data;
-
-                // state = payload
             })
+            .addCase(getPointerListApi.pending, (state) => {
+                state.status = 'pending'
+            })
+            .addCase(getPointerListApi.rejected, (state) => {
+            })
+
 
             .addCase(createNewPoint.fulfilled, (state, {payload}) => {
-                // state.pointers.push(payload.data)
-                // state.pointers = [...state.pointers, payload]
                 state.pointers = payload.data
                 alert('Point created');
-
             })
+            .addCase(createNewPoint.pending, (state) => {
+                state.status = 'pending'
+            })
+
 
             .addCase(deletePointApi.fulfilled, (state, {payload}) => {
                 state.pointers = payload.data
                 alert('Deleted')
             })
+            .addCase(deletePointApi.pending, (state) => {
+                state.status = 'pending'
+            })
+
 
             .addCase(updatePointApi.fulfilled, (state, {payload}) => {
                 state.pointers = payload.data
-                alert('Updated');
+                state.status = 'idle'
 
+                alert('Updated');
             })
+            .addCase(updatePointApi.pending, (state) => {
+                state.status = 'pending'
+            })
+
     }
 })
 
-export const {editName, editLatitude, editLongitude, updatePointerList} = pointerSlice.actions;
+export const {} = pointerSlice.actions;
 
 export default pointerSlice.reducer;

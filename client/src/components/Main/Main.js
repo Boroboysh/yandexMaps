@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import "./main.css";
+import styles from './main.module.css'
 import {Map, Placemark, ZoomControl} from "@pbe/react-yandex-maps";
 import {useSelector} from "react-redux";
 import {TextField} from "@consta/uikit/TextField";
@@ -7,10 +7,10 @@ import {Button} from "@consta/uikit/Button";
 import {createNewPoint, getPointerListApi} from "../../api/api";
 import {Text} from "@consta/uikit/Text";
 import {Layout} from "@consta/uikit/Layout";
-import {setIsLogged} from "../../redux/features/auth/authSlice";
 import StateEditing from "../StateEditing/StateEditing";
+import {Loader} from "@consta/uikit/Loader";
 
-let Main = ({isLogged, dispatch}) => {
+let Main = ({isLogged, dispatch, status}) => {
     const pointerSelector = useSelector(state => state.pointer)
 
     const [centredCoordinates, setCentredCoordinates] = useState({center: [], zoom: 9});
@@ -22,9 +22,9 @@ let Main = ({isLogged, dispatch}) => {
     const [longitude, setLongitude] = useState();
     const [latitude, setLatitude] = useState();
 
-    if (window.localStorage.getItem('isLogged')) {
-        dispatch(setIsLogged(true))
-    }
+    // if (isLogged) {
+    //     dispatch(setIsLogged(true))
+    // }
 
     useEffect(() => {
         if (navigator.geolocation) {
@@ -46,31 +46,33 @@ let Main = ({isLogged, dispatch}) => {
     }, [])
 
     useEffect(() => {
-        if (pointerSelector.pointers.length === 0) {
-            dispatch(getPointerListApi())
-        }
-    })
+        dispatch(getPointerListApi())
+    }, [isLogged])
 
     if (!isLogged) {
-        return (
-            <div className="wrapper">
-                <Layout>
-                    <section className="wrap__layout">
-                        <div className="wrap__layout__title">
-                            Информация о проекте
-                        </div>
-                        <div className="wrap__layout__description">
-                            Веб-приложение для работы с Яндекс картами
-                        </div>
-                    </section>
-                </Layout>
-            </div>
-        )
+        if (status !== 'idle') {
+            return <div className={styles.wrapper}><Loader/></div>
+        } else {
+            return (
+                <div className={styles.wrapper}>
+                    <Layout>
+                        <section className={styles.layout}>
+                            <div className={styles.layout__title}>
+                                Веб-приложение для работы с Яндекс картами
+                            </div>
+                            <div className={styles.layout__description}>
+                                Создавание, удаление и редактирование точек на карте
+                            </div>
+                        </section>
+                    </Layout>
+                </div>
+            )
+        }
     }
 
     return (
-        <div className="wrap">
-            <section className="locationListWrap">
+        <div className={styles.wrap}>
+            <section className={styles.locationListWrap}>
                 <form>
                     <label htmlFor="namePoint">
                         <TextField label="Название: "
@@ -102,10 +104,10 @@ let Main = ({isLogged, dispatch}) => {
                         onClick={() => dispatch(createNewPoint({namePoint, longitude, latitude}))}
                         size="s"
                         id="buttonAddNew"/>
-                <section className="locationList">
-                    <div className="locationList__title">
-                        <Text view='primary'>Название |</Text>
-                        <Text view='primary'>Долгота |</Text>
+                <section className={styles.locationList}>
+                    <div className={styles.locationList__title}>
+                        <Text view='primary'>Название</Text>
+                        <Text view='primary'>Долгота</Text>
                         <Text view='primary'>Широта</Text>
                     </div>
                     <div>
@@ -119,7 +121,7 @@ let Main = ({isLogged, dispatch}) => {
                     </div>
                 </section>
             </section>
-            <section className="yandexMapWrap">
+            <section className={styles.yandexMapWrap}>
                 <Map state={centredCoordinates} width="800px" height="800px">
                     {
                         pointerSelector.pointers.map((point) => <Placemark key={point.id}
@@ -131,7 +133,7 @@ let Main = ({isLogged, dispatch}) => {
                     }
                     <Placemark geometry={[currentUserLongitude, currentUserLatitude]}
                                properties={{
-                                   balloonContent: 'You here',
+                                   balloonContent: 'Ты здесь',
                                }}
                                modules={['geoObject.addon.balloon']}
                     />

@@ -29,6 +29,7 @@ Route::prefix('auth')->group(function () {
 
     Route::middleware('auth:sanctum')->get('/status', [LoginController::class, 'status']);
 
+    Route::get('/check', [LoginController::class, 'status']);
 });
 
 

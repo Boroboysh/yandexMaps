@@ -34,12 +34,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            $user = [
-                'login' => Auth::user()->name,
-                'isLogged' => true
-            ];
-
-            return response($user, 200);
+            return Auth::user();
         }
 
         $errLogin = [
@@ -72,20 +67,7 @@ class LoginController extends Controller
             'email' => $request->input('email'),
         ]);
 
-        // Refactoring
-
-        $credentials = $request->validate([
-            'email' => ['required'],
-            'password' => ['required'],
-        ]);
-
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            return response('SignIn OK. You authorized. Need redirect');
-        }
-
-        return 'SignIn OK. You not authorized';
+        return response('You registered successfully');
     }
 
     public function logout(Request $request)
@@ -101,7 +83,11 @@ class LoginController extends Controller
 
     public function status()
     {
-        return Auth::check();
+        if (Auth::check()) {
+            return Auth::user();
+        }
+
+        return response(null, 401);
     }
 
     public function createAdmin()

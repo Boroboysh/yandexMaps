@@ -683,7 +683,7 @@
       var isiPad = os.isiOS() && /ipad/i.test(userAgent) === true;
       var isiPhone = os.isiOS() && !isiPad;
       var isMobile = os.isiOS() || os.isAndroid();
-      var isTouch = isMobile || mediaMatch('(pointer:coarse)');
+      var isTouch = isMobile || mediaMatch('(pointerSlice:coarse)');
       var isTablet = isiPad || !isiPhone && isMobile && mediaMatch('(min-device-width:768px)');
       var isPhone = isiPhone || isMobile && !isTablet;
       var iOSwebview = browser.isSafari() && os.isiOS() && /safari/i.test(userAgent) === false;

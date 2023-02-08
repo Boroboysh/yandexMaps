@@ -1,7 +1,11 @@
-import React, {useState} from 'react'
+import React, {useState} from 'react';
+import styles from './stateEditing.module.css'
 import {TextField} from "@consta/uikit/TextField";
 import {Button} from "@consta/uikit/Button";
 import {deletePointApi, updatePointApi} from "../../api/api";
+import {FieldGroup} from "@consta/uikit/FieldGroup";
+import {cnMixSpace} from "@consta/uikit/MixSpace";
+import {Text} from "@consta/uikit/Text";
 
 const StateEditing = ({indexArray, point, dispatch, setCentredCoordinates, pointerSelector}) => {
     const [isEditing, setIsEditing] = useState(false);
@@ -30,19 +34,19 @@ const StateEditing = ({indexArray, point, dispatch, setCentredCoordinates, point
     }
 
     return (
-        <section className="locationList__element">
-            <section className="locationList__elemen__viewMode" style={{
+        <section className={styles.locationList__element}>
+            <section className={styles.locationList__element__viewMode} style={{
                 display: !isEditing ? '' : 'none'
             }}
                      onClick={() => setCentredCoordinates({
                          center: [point.longitude, point.latitude],
                          zoom: 9
                      })}>
-                <span> {point.name} |</span>
-                <span> {point.longitude} |</span>
-                <span> {point.latitude} </span>
+                <Text as="span">{point.name} |</Text>
+                <Text as="span"> {point.longitude} |</Text>
+                <Text as="span"> {point.latitude} </Text>
             </section>
-            <section className="locationList__element__editMode" style={{
+            <section className={styles.locationList__element__editMode} style={{
                 display: isEditing ? '' : 'none'
             }}>
                 <TextField value={editName}
@@ -65,20 +69,25 @@ const StateEditing = ({indexArray, point, dispatch, setCentredCoordinates, point
                 />
             </section>
 
-            <section className="locationList__element__buttons">
-                <Button label="Редактировать"
-                        size="s"
-                        view="secondary"
-                    // style={{marginRight: '5px '}}
-                        onClick={() => updatePoint(indexArray )}
-                />
+            <section className={styles.locationList__element__buttons}>
+                <FieldGroup size="s" className={cnMixSpace({
+                    m: 'm',
+                    mT: 'l',
+                })}>
+                    <Button label="Редактировать"
+                            size="s"
+                            view="secondary"
+                        // style={{marginRight: '5px '}}
+                            onClick={() => updatePoint(indexArray)}
+                    />
 
-                <Button label="Удалить"
-                        view='secondary'
-                        size='s'
-                    // style={{margin: '5px'}}
-                        onClick={() => dispatch(deletePointApi(point.id))}
-                />
+                    <Button label="Удалить"
+                            view='secondary'
+                            size='s'
+                        // style={{margin: '5px'}}
+                            onClick={() => dispatch(deletePointApi(point.id))}
+                    />
+                </FieldGroup>
             </section>
         </section>
     )

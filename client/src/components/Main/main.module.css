@@ -15,18 +15,18 @@
     align-items: center;
 }
 
-.wrap__layout {
+.layout {
     display: flex;
     flex-direction: column;
     text-align: center;
 }
 
-.wrap__layout__title {
+.layout__title {
     font-size: 30px;
     font-weight: 600;
 }
 
-.wrap__layout__description {
+.layout__description {
     margin-top: 20px;
     font-size: 20px;
 }
@@ -92,6 +92,7 @@
 .locationList__elemen__viewMode {
     cursor: pointer;
     margin-bottom: 20px;
+
 }
 
 .locationList__element__editMode {
@@ -99,12 +100,6 @@
     flex-direction: column;
 }
 
-/*.locationList__element__buttons {
-    display: flex;
-    flex-direction: column;
-    width: 80%;
-    justify-content: center;
-}*/
 
 .yandexMapWrap {
     display: flex;

@@ -830,10 +830,10 @@
     return maxRatio;
   }
   /**
-   * Get a pointer from an event object.
+   * Get a pointerSlice from an event object.
    * @param {Object} event - The target event object.
    * @param {boolean} endOnly - Indicates if only returns the end point coordinate or not.
-   * @returns {Object} The result pointer contains start and/or end point coordinates.
+   * @returns {Object} The result pointerSlice contains start and/or end point coordinates.
    */
 
   function getPointer(_ref2, endOnly) {
@@ -1887,7 +1887,7 @@
       var buttons = event.buttons,
           button = event.button;
 
-      if (this.disabled // Handle mouse event and pointer event and ignore touch event
+      if (this.disabled // Handle mouse event and pointerSlice event and ignore touch event
       || (event.type === 'mousedown' || event.type === 'pointerdown' && event.pointerType === 'mouse') && ( // No primary button (Usually the left button)
       isNumber(buttons) && buttons !== 1 || isNumber(button) && button !== 0 // Open context menu
       || event.ctrlKey)) {
@@ -1904,7 +1904,7 @@
           pointers[touch.identifier] = getPointer(touch);
         });
       } else {
-        // Handle mouse event and pointer event
+        // Handle mouse event and pointerSlice event
         pointers[event.pointerId || 0] = getPointer(event);
       }
 

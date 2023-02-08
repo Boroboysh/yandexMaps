@@ -2,13 +2,13 @@ import axios from "axios";
 import {createAsyncThunk} from "@reduxjs/toolkit";
 
 export const checkStatusApi = createAsyncThunk(
-    'auth/status',
+    'authSlice/status',
     async (payload) => {
         return await axios.get('http://localhost:8000/auth/status');
     });
 
 export const registerApi = createAsyncThunk(
-    'auth/register',
+    'authSlice/register',
     async (payload) => {
         let response = await axios.post('http://localhost:8000/auth/register', payload, {
             withCredentials: true
@@ -19,7 +19,7 @@ export const registerApi = createAsyncThunk(
 );
 
 export const loginApi = createAsyncThunk(
-    'auth/auth',
+    'authSlice/authSlice',
     async (payload) => {
         let response = await axios.post('http://localhost:8000/auth/login', payload, {
             withCredentials: true
@@ -29,7 +29,7 @@ export const loginApi = createAsyncThunk(
     })
 
 export const logoutApi = createAsyncThunk(
-    'auth/logout',
+    'authSlice/logout',
     async () => {
         return await axios.get('http://localhost:8000/auth/logout', {
             withCredentials: true
@@ -81,6 +81,17 @@ export const updatePointApi = createAsyncThunk(
         return response
     }
 );
+
+export const checkAuthApi = createAsyncThunk(
+    'auth/check',
+    async () => {
+        let response = await axios.get('http://localhost:8000/auth/check', {
+            withCredentials: true
+        })
+
+        return response
+    }
+)
 
 export async function create_token() {
     await axios.get('http://localhost:8000/sanctum/csrf-cookie').then(response => {
