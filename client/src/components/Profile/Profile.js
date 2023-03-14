@@ -15,7 +15,7 @@ let Profile = ({login}) => {
         fontWeight: '600'
     }
 
-    if (!window.localStorage.getItem('isLogged')) {
+    if (!window.localStorage.getItem('ymaps_bearer_token')) {
         return <Navigate to='/login' />
     }
 

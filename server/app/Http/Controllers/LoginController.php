@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UserResource;
-use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,9 +10,14 @@ use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['authenticate', 'register']]);
+    }
+
     public function authenticate(Request $request)
     {
-        $data = $request->only( 'email', 'password');
+        $data = $request->only('email', 'password');
 
         $validator = Validator::make($data, [
             'email' => 'required|email:rfc,dns',
@@ -23,27 +26,40 @@ class LoginController extends Controller
 
         //Send failed response if request is not valid
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()]);
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->messages()
+            ]);
         }
 
         $credentials = $request->validate([
-            'email' => ['required'],
-            'password' => ['required'],
+            'email' => ['required', 'email:rfc,dns'],
+            'password' => ['required', 'string'],
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+        $token = Auth::attempt($credentials);
 
-            return Auth::user();
+        if (!$token) {
+            return response()->json([
+                'status' => 'error',
+                'message' => [
+                    'login' => ["Invalid email or password"]
+                ],
+            ]);
         }
 
-        $errLogin = [
-            'error' => [
-                'loginErr' => ["Invalid email or password"]
-            ]
-        ];
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
 
-        return response()->json($errLogin);
+            return response()->json([
+                'status' => 'success',
+                'user' => $user,
+                'authorisation' => [
+                    'token' => $token,
+                    'type' => 'bearer',
+                ]
+            ]);
+        }
     }
 
     public function register(Request $request)
@@ -58,52 +74,69 @@ class LoginController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()]);
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->messages()
+            ], 400);
         }
 
-        User::create([
-            'name' => $request->input('name'),
-            'password' => Hash::make($request->input('password')),
-            'email' => $request->input('email'),
+        $checkUser = User::where('email', $request->input('email'))->first();
+
+        if (!$checkUser) {
+            $user = User::create([
+                'name' => $request->input('name'),
+                'password' => Hash::make($request->input('password')),
+                'email' => $request->input('email'),
+            ]);
+
+            $token = Auth::login($user);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User created successfully',
+                'user' => $user,
+                'authorisation' => [
+                    'token' => $token,
+                    'type' => 'bearer',
+                ]
+            ]);
+        }
+        return response()->json([
+            'status' => 'error',
+            'message' => [
+                'user' => ['User already exists']
+            ]
         ]);
 
-        return response('You registered successfully');
     }
 
     public function logout(Request $request)
     {
         Auth::logout();
 
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
-        return 'Session logout delete id ok';
-    }
-
-    public function status()
-    {
-        if (Auth::check()) {
-            return Auth::user();
-        }
-
-        return response(null, 401);
-    }
-
-    public function createAdmin()
-    {
-        Admin::create([
-            'name' => 'admin1',
-            'email' => 'admin@gmail.com',
-            'password' => bcrypt('admin')
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Successfully logged out',
         ]);
 
-        return 'OK';
     }
 
-    public function getCurrentUsername()
+    public function refresh()
     {
-        return Auth::user()->name;
+        return response()->json([
+            'status' => 'success',
+            'user' => Auth::user(),
+            'authorisation' => [
+                'token' => Auth::refresh(),
+                'type' => 'bearer',
+            ]
+        ]);
     }
 
+    public function getUserInfo()
+    {
+        return response()->json([
+            'status' => 'success',
+            'user' => Auth::user(),
+        ]);
+    }
 }

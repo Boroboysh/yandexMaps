@@ -4,7 +4,7 @@ import {Map, Placemark, ZoomControl} from "@pbe/react-yandex-maps";
 import {useSelector} from "react-redux";
 import {TextField} from "@consta/uikit/TextField";
 import {Button} from "@consta/uikit/Button";
-import {createNewPoint, getPointerListApi} from "../../api/api";
+import {createNewPoint} from "../../api/api";
 import {Text} from "@consta/uikit/Text";
 import {Layout} from "@consta/uikit/Layout";
 import StateEditing from "../StateEditing/StateEditing";
@@ -21,10 +21,6 @@ let Main = ({isLogged, dispatch, status}) => {
     const [namePoint, setNamePoint] = useState();
     const [longitude, setLongitude] = useState();
     const [latitude, setLatitude] = useState();
-
-    // if (isLogged) {
-    //     dispatch(setIsLogged(true))
-    // }
 
     useEffect(() => {
         if (navigator.geolocation) {
@@ -45,14 +41,11 @@ let Main = ({isLogged, dispatch, status}) => {
         }
     }, [])
 
-    useEffect(() => {
-        dispatch(getPointerListApi())
-    }, [isLogged])
-
     if (!isLogged) {
         if (status !== 'idle') {
             return <div className={styles.wrapper}><Loader/></div>
-        } else {
+        }
+        else {
             return (
                 <div className={styles.wrapper}>
                     <Layout>
@@ -61,7 +54,7 @@ let Main = ({isLogged, dispatch, status}) => {
                                 Веб-приложение для работы с Яндекс картами
                             </div>
                             <div className={styles.layout__description}>
-                                Создавание, удаление и редактирование точек на карте
+                                Создание, удаление и редактирование точек на карте
                             </div>
                         </section>
                     </Layout>
@@ -73,7 +66,7 @@ let Main = ({isLogged, dispatch, status}) => {
     return (
         <div className={styles.wrap}>
             <section className={styles.locationListWrap}>
-                <form>
+                <form >
                     <label htmlFor="namePoint">
                         <TextField label="Название: "
                                    onChange={(e) => setNamePoint(e.value)}
@@ -98,6 +91,11 @@ let Main = ({isLogged, dispatch, status}) => {
                                    value={latitude}
                                    size="s"
                         />
+                    </label>
+                    <label htmlFor="error">
+                    {
+                        pointerSelector.errorValidate.map((error) => <Text size="s" view="alert"> {error} </Text>)
+                    }
                     </label>
                 </form>
                 <Button label="Добавить"

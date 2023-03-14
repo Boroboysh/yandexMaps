@@ -1,10 +1,10 @@
 import React from 'react';
-import styles from './internalServer.module.css';
+import styles from './notFound.module.css';
 
-const InternalServer = (props) => {
+const NotFound = (props) => {
     return (
-        <p className={styles.internalServer}>{"500 SERVER ERROR!"}</p>
+        <p className={styles.internalServer}>{"404 NOT FOUND"}</p>
     )
 }
 
-export default InternalServer;
+export default NotFound;

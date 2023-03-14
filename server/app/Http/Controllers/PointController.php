@@ -12,19 +12,32 @@ use Illuminate\Support\Str;
 
 class PointController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     public function getPointList()
     {
-
         return Pointers::select('*')->where("user_id", Auth::id())->get();
     }
 
     public function newPoint(Request $request)
     {
-        /*     $credentials = $request->validate([
-                 'name' => ['required'],
-                 'longitude' => ['required'],
-                 'latitude' => ['required']
-             ]);*/
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between: -180,180'
+        ], [
+            'between' => 'The :attribute value :input is not between :min - :max.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->messages()
+            ]);
+        }
 
         Pointers::create([
             'name' => $request->input('namePoint'),
@@ -34,17 +47,34 @@ class PointController extends Controller
         ]);
 
         // username_id Должен передаваться с фронта...?
-        // Передается api ключ, ищется в таблцие users юзер с этим ключом, возвращается id usera таким ключом и записывается в username_id
+        // Передается api ключ, ищется в таблцие users юзер с этим ключом, возвращается id user таким ключом и записывается в username_id
 
         return Pointers::select('*')->where("user_id", Auth::id())->get();
     }
 
-    public function updatePoint($id, Request $request)
+        public function updatePoint($id, Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between: -180,180'
+        ], [
+            'between' => 'The :attribute value :input is not between :min - :max.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->messages()
+            ]);
+        }
+
+
         Pointers::where('id', $id)->update([
             'name' => $request->input('name'),
             'longitude' => $request->input('longitude'),
-            'latitude' => $request->input('latitude')
+            'latitude' => $request->input('latitude'),
+            'user_id' => Auth::id()
         ]);
 
         return Pointers::select('*')->where("user_id", Auth::id())->get();
@@ -52,7 +82,7 @@ class PointController extends Controller
 
     public function deletePoint($id)
     {
-        Pointers::where('id', $id)->delete();
+        Pointers::where('id', $id)->where('user_id', Auth::id())->delete();
 
         return Pointers::select('*')->where("user_id", Auth::id())->get();
     }

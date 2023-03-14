@@ -11,22 +11,35 @@ import Register from "./components/Register/Register";
 import Profile from "./components/Profile/Profile";
 import {useDispatch, useSelector} from "react-redux";
 import {Button} from "@consta/uikit/Button";
-import {checkAuthApi, create_token, logoutApi} from "./api/api";
+import {getPointerListApi, logoutApi, userInfoApi} from "./api/api";
 import {YMaps} from "@pbe/react-yandex-maps";
+import axios from "axios";
+import data from './../package.json';
+import InternalServer from "./components/InternalServer/InternalServer";
+import NotFound from "./components/NotFound/NotFound";
+
+axios.defaults.baseURL = data.serverUrl;
+axios.defaults.withCredentials = true;
 
 function App() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const {login, errorValidate, status} = useSelector(state => state.login);
 
-    if (!window.localStorage.getItem('sanctum-csrf-status')) {
-        //sanctum-csrf-status true / false
-        create_token();
-    }
-
     useEffect(() => {
-        dispatch(checkAuthApi())
-    }, [])
+        if (!login && window.localStorage.getItem('ymaps_bearer_token')) {
+            dispatch(userInfoApi());
+        }
+
+        if (login) {
+            dispatch(getPointerListApi())
+        }
+    }, [login])
+
+    if (status === 'reject') {
+        return <InternalServer/>
+
+    }
 
     return (
         <Theme preset={presetGpnDefault}>
@@ -44,14 +57,14 @@ function App() {
                     <>
                         <HeaderModule>
                             <HeaderLogin
-                                isLogged={login }
+                                isLogged={login}
                                 personName={login}
-                                onClick={() =>  login ? navigate('/profile') : navigate('/login')}
+                                onClick={() => login ? navigate('/profile') : navigate('/login')}
                                 label='Войти'
                             />
 
                             {
-                                login  ? <Button label="Выйти" onClick={() => dispatch(logoutApi())}/> : <></>
+                                login ? <Button label="Выйти" onClick={() => dispatch(logoutApi())}/> : <></>
                             }
                         </HeaderModule>
                     </>
@@ -61,10 +74,13 @@ function App() {
                 <Routes>
                     <Route element={<Login isLogged={login} navigate={navigate} dispatch={dispatch}
                                            errorValidate={errorValidate}/>} path="/login"/>
-                    <Route element={<Register isLogged={login} navigate={navigate} dispatch={dispatch} errorValidate={errorValidate} />}
+                    <Route element={<Register isLogged={login} navigate={navigate} dispatch={dispatch}
+                                              errorValidate={errorValidate}/>}
                            path="/register"/>
-                    <Route element={<Main isLogged={ login} dispatch={dispatch} status={status}/>} path="/"/>
+                    <Route element={<Main isLogged={login} dispatch={dispatch} status={status}/>} path="/"/>
                     <Route element={<Profile login={login}/>} path="/profile"/>
+                    <Route element={<InternalServer/>} path="/500"/>
+                    <Route element={<NotFound/>} path="*"/>
                 </Routes>
 
             </YMaps>

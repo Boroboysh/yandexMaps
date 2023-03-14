@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {checkAuthApi, loginApi, logoutApi, registerApi} from "../../../api/api";
+import {loginApi, logoutApi, registerApi, userInfoApi} from "../../../api/api";
 
 export const authSlice = createSlice({
         name: 'login',
@@ -11,70 +11,111 @@ export const authSlice = createSlice({
         reducers: {},
         extraReducers: (builder) => {
             builder
-                .addCase(checkAuthApi.fulfilled, (state, {payload}) => {
-                    state.login = payload.data.name;
-                    state.status = 'idle';
-                })
-                .addCase(checkAuthApi.pending, (state) => {
-                    state.status = 'pending';
-                })
-                .addCase(checkAuthApi.rejected, (state) => {
-                    state.status = 'idle';
-                })
-
-
-                .addCase(loginApi.pending, (state) => {
-                    state.status = 'pending';
-                })
                 .addCase(loginApi.fulfilled, (state, {payload}) => {
-                    let indexArray = 0;
-                    let errorsArray = []
+                    if (payload.data.status === 'error') {
+                        console.log(payload.data);
 
-                    for (let key in payload.data.error) {
-                        errorsArray[indexArray] = payload.data.error[key][0]
-                        indexArray++;
-                    }
+                        let indexArray = 0;
+                        let errorsArray = []
 
-                    // clearing current errors
-                    state.errorValidate = []
-                    state.errorValidate = errorsArray
+                        for (let key in payload.data.message) {
+                            errorsArray[indexArray] = payload.data.message[key][0]
+                            indexArray++;
 
-                    if (state.errorValidate.length === 0) {
-                        state.login = payload.data.name;
+                            console.log(`ОШибка: ${payload.data.message[key][0]}`)
+                        }
+
+                        console.log(`Массив ошибок: ${errorsArray}`)
+
+
+
+                        state.errorValidate = []
+                        state.errorValidate = errorsArray
+
+                    } else {
+                        console.log(payload.data);
+
+                        state.login = payload.data.user.name;
+
+                        window.localStorage.setItem('ymaps_bearer_token', payload.data.authorisation.token);
 
                         alert('You are logged in')
                     }
 
                 })
+                .addCase(loginApi.pending, (state) => {
+                    state.status = 'pending';
+                })
                 .addCase(loginApi.rejected, (state) => {
                     alert('Timeout');
+                    state.status = 'reject';
                 })
 
                 .addCase(logoutApi.fulfilled, (state) => {
                     state.login = undefined;
                     state.status = 'idle';
+
+                    console.log(window.localStorage)
+
+                    window.localStorage.removeItem('ymaps_bearer_token');
+
+                    console.log(window.localStorage)
                 })
                 .addCase(logoutApi.pending, (state) => {
                     state.status = 'pending';
                 })
+                .addCase(logoutApi.rejected, (state) => {
+                    state.status = 'reject';
+                })
                 // .addCase(logoutApi)
 
                 .addCase(registerApi.fulfilled, (state, {payload}) => {
-                    let indexArray = 0;
-                    let errorsArray = []
+                    if (payload.data.status === 'error') {
+                        let indexArray = 0;
+                        let errorsArray = []
 
-                    for (let key in payload.data.error) {
-                        errorsArray[indexArray] = payload.data.error[key][0]
-                        indexArray++;
+                        console.log(payload.data)
+
+                        for (let key in payload.data.message) {
+                            errorsArray[indexArray] = payload.data.message[key][0]
+                            indexArray++;
+                        }
+
+                        console.log(errorsArray)
+
+                        // clearing current errors
+                        state.errorValidate = []
+
+                        // output current errors
+                        state.errorValidate = errorsArray
+                    } else {
+                        state.login = payload.data.user.name;
+
+                        window.localStorage.setItem('ymaps_bearer_token', payload.data.authorisation.token);
+
+                        alert(payload.data.message)
+
+                        console.log(payload.data)
                     }
+                })
+                .addCase(registerApi.pending, (state) => {
+                    state.status = 'pending';
+                    console.log('pending')
+                })
+                .addCase(registerApi.rejected, (state) => {
+                    state.status = 'reject';
+                    console.log('Reject')
+                })
 
-                    // clearing current errors
-                    state.errorValidate = []
-
-                    // output current errors
-                    state.errorValidate = errorsArray
-
-                    alert(payload.data)
+                .addCase(userInfoApi.fulfilled, (state, {payload}) => {
+                    state.login = payload.data.user.name;
+                })
+                .addCase(userInfoApi.pending, (state, payload) => {
+                    state.status = 'pending';
+                })
+                .addCase(userInfoApi.rejected, (state, payload) => {
+                    state.login = '';
+                    state.status = 'idle';
                 })
         }
     }

@@ -47,20 +47,18 @@
     align-items: center;
     border: 1px solid #bebebe;
     border-radius: 10px;
+    margin-right: 5px;
+    padding: 0px 10px 0px 10px;
 }
 
 #buttonAddNew {
     margin-top: 10px;
 }
 
-.locationListWrap {
-    margin-right: 5px;
-    padding: 0px 10px 0px 10px;
-}
-
 .locationListWrap form {
     display: flex;
     flex-direction: column;
+    max-width: 220px;
     align-items: end;
     margin-top: 10px;
     margin-bottom: 5px;
